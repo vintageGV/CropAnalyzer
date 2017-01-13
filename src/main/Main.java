@@ -1,5 +1,6 @@
 package main;
 
+import ann.ANN;
 import ip.ImgProcessing;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Scanner;
 
 /**
@@ -31,9 +33,26 @@ public class Main extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 Mat imgOrig = Imgcodecs.imread(directory.getText());
                 ImgProcessing ip = new ImgProcessing();
+                ANN ann = new ANN();
+
                 Mat bgs = ip.bgSubtraction(imgOrig);
                 Mat nf = ip.noiseFilter(bgs);
-                ip.makeCrop(imgOrig,nf);
+                Mat saver = ip.makeCrop(imgOrig,nf);
+
+                String state = ann.analyze("outputs/imgCropped0.jpg");
+                System.out.println("STATE: "+state);
+                double hist = ip.histoGram(imgOrig, nf);
+                System.out.print("Histogram result: ");
+                if(hist<=10.0f)
+                    System.out.println("Severely Bad");
+                else if(hist>10.0f&&hist<=20.0f)
+                    System.out.println("Bad");
+                else if(hist>20.0f&&hist<=30.0f)
+                    System.out.println("Below Average");
+                else if(hist>30.0f&&hist<=40.0f)
+                    System.out.println("Average");
+                else if(hist>40.0f)
+                    System.out.println("Healthy");
             }
         });
 

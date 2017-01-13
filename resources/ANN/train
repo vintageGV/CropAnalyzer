@@ -1,0 +1,10 @@
+# defect classifier retraining with inception
+cdir=`dirname $0`
+
+python /tensorflow/tensorflow/examples/image_retraining/retrain.py \
+--how_many_training_steps=50 \
+--bottleneck_dir=training/bottlenecks \
+--output_graph=training/retrained_graph.pb \
+--output_labels=training/retrained_labels.txt \
+--model_dir=resources/inception \
+--image_dir labels/
